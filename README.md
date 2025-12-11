@@ -1,0 +1,1 @@
+# Monitoramento_Maquinas_BACKEND_CORRIGIDO
