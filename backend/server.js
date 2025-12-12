@@ -9,7 +9,7 @@ const usuarioRoutes = require('../backend/routes/usuario')
 const app = express();
 const porta = process.env.PORT || 10000 ;
 app.use(cors({
-    origin: ['http://localhost:5173', "https://monitoramento-maquinas-frontend-corrigido-ledje6gyh.vercel.app/"],
+    origin: ["https://monitoramento-maquinas-backend-corrigido.onrender.com"],
     methods: 'GET, PUT, DELETE, POST',
     credentials: true
 }));
@@ -25,6 +25,7 @@ app.listen(porta, () => {
     console.log(`Servidor rodando em http://localhost:${porta}`);
 
 });
+
 
 
 
