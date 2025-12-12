@@ -7,7 +7,7 @@ const maquinaRoutes = require('../backend/routes/maquinas');
 const ordemRoutes = require('../backend/routes/oredemServico');
 const usuarioRoutes = require('../backend/routes/usuario')
 const app = express();
-const porta = process.env.PORT;
+const porta = process.env.PORT || 10000 ;
 app.use(cors({
     origin: ['http://localhost:5173', "https://monitoramento-maquinas-frontend-corrigido-ledje6gyh.vercel.app/"],
     methods: 'GET, PUT, DELETE, POST',
@@ -25,5 +25,6 @@ app.listen(porta, () => {
     console.log(`Servidor rodando em http://localhost:${porta}`);
 
 });
+
 
 
