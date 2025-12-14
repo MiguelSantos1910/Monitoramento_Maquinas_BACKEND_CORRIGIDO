@@ -10,20 +10,28 @@ const usuarioRoutes = require("./routes/usuario");
 const app = express();
 const porta = process.env.PORT || 10000;
 
-const allowedOrigins = [
-  "https://monitoramento-maquinas-frontend.vercel.app"
+const allowedPatterns = [
+  /^https:\/\/monitoramento-maquinas-.*\.vercel\.app$/
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permite chamadas sem origin (Postman, backend)
+  origin: (origin, callback) => {
+    // Permite chamadas sem origin (Postman, health check)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    // Normaliza a origin
+    const normalizedOrigin = origin.replace(/\/$/, "");
+
+    const isAllowed = allowedPatterns.some(pattern =>
+      pattern.test(normalizedOrigin)
+    );
+
+    if (isAllowed) {
       return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
     }
+
+    console.error("🚫 Origin bloqueada pelo CORS:", origin);
+    return callback(null, false);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -35,11 +43,16 @@ app.use(express.json());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Conectado ao MongoDB"))
-  .catch(err => console.error("❌ Erro ao conectar ao MongoDB:", err));
+  .catch(err => console.error("❌ Erro MongoDB:", err));
 
 app.use("/api/maquinas", maquinaRoutes);
 app.use("/api/ordens", ordemRoutes);
 app.use("/api/usuarios", usuarioRoutes);
+
+app.use((err, req, res, next) => {
+  console.error("🔥 ERRO GLOBAL:", err);
+  res.status(500).json({ message: "Erro interno do servidor" });
+});
 
 app.listen(porta, () => {
   console.log(`🚀 Servidor rodando na porta ${porta}`);
