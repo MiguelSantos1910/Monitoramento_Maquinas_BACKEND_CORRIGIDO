@@ -17,7 +17,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.options("*", cors());
+app.options("/*", cors());
 app.use(express.json());
 
 mongoose
@@ -32,3 +32,4 @@ app.use('/api/usuarios', usuarioRoutes);
 app.listen(porta, () => {
   console.log(`Servidor rodando na porta ${porta}`);
 });
+
